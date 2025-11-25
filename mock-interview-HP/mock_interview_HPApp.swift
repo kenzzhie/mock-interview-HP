@@ -9,9 +9,26 @@ import SwiftUI
 
 @main
 struct mock_interview_HPApp: App {
+    @StateObject private var bookVM = BookVM()
+    @StateObject private var characterVM = CharacterVM()
+    @StateObject private var chapterVM = ChapterVM()
+    @StateObject private var spellVM = SpellVM()
+    @StateObject private var movieVM = MovieVM()
+    @StateObject private var potionVM = PotionVM()
+    @StateObject private var homeVM = HomeVM()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
+                .tint(.black)
+                .preferredColorScheme(.light)
+                .environmentObject(bookVM)
+                .environmentObject(characterVM)
+                .environmentObject(chapterVM)
+                .environmentObject(spellVM)
+                .environmentObject(movieVM)
+                .environmentObject(potionVM)
+                .environmentObject(homeVM)
         }
     }
 }

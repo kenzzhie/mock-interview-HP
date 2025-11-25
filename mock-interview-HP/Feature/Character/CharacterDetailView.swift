@@ -16,18 +16,9 @@ struct CharacterDetailView: View {
                 
                 HStack {
                     Spacer()
-                    AsyncImage(url: character.attributes.image) { img in
-                        img.resizable().scaledToFit()
-                    } placeholder: {
-                        Image(systemName: "person.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(.gray.opacity(0.3))
-                            .padding()
-                    }
-                    .frame(height: 300)
-                    .cornerRadius(12)
-                    .shadow(radius: 5)
+                    ImageLoad(url: character.attributes.image?.absoluteString)
+                        .frame(width: 150, height: 200)
+                        .shadow(radius: 3)
                     Spacer()
                 }
                 
@@ -51,26 +42,28 @@ struct CharacterDetailView: View {
                 
                 Divider()
                 
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("General Information").font(.headline)
-                    
-                    if let species = character.attributes.species {
-                        InfoRow(label: "Species", value: species)
-                    }
-                    if let gender = character.attributes.gender {
-                        InfoRow(label: "Gender", value: gender)
-                    }
-                    if let born = character.attributes.born {
-                        InfoRow(label: "Born", value: born)
-                    }
-                    if let died = character.attributes.died {
-                        InfoRow(label: "Died", value: died)
-                    }
-                    if let blood = character.attributes.bloodStatus {
-                        InfoRow(label: "Blood Status", value: blood)
-                    }
-                    if let marital = character.attributes.maritalStatus {
-                        InfoRow(label: "Marital Status", value: marital)
+                if character.attributes.species != nil || character.attributes.gender != nil || character.attributes.born != nil || character.attributes.died != nil || character.attributes.bloodStatus != nil || character.attributes.maritalStatus != nil {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("General Information").font(.headline)
+                        
+                        if let species = character.attributes.species {
+                            InfoRow(label: "Species", value: species)
+                        }
+                        if let gender = character.attributes.gender {
+                            InfoRow(label: "Gender", value: gender)
+                        }
+                        if let born = character.attributes.born {
+                            InfoRow(label: "Born", value: born)
+                        }
+                        if let died = character.attributes.died {
+                            InfoRow(label: "Died", value: died)
+                        }
+                        if let blood = character.attributes.bloodStatus {
+                            InfoRow(label: "Blood Status", value: blood)
+                        }
+                        if let marital = character.attributes.maritalStatus {
+                            InfoRow(label: "Marital Status", value: marital)
+                        }
                     }
                 }
                 
@@ -93,31 +86,34 @@ struct CharacterDetailView: View {
                     Divider()
                 }
                 
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Magical Info").font(.headline)
-                    
-                    if let patronus = character.attributes.patronus {
-                        InfoRow(label: "Patronus", value: patronus)
-                    }
-                    if let boggart = character.attributes.boggart {
-                        InfoRow(label: "Boggart", value: boggart)
-                    }
-                    if let animagus = character.attributes.animagus {
-                        InfoRow(label: "Animagus", value: animagus)
-                    }
-                    
-                    if let wands = character.attributes.wands, !wands.isEmpty {
-                        HStack(alignment: .top) {
-                            Text("Wand(s)")
-                                .foregroundColor(.secondary)
-                                .frame(width: 100, alignment: .leading)
-                                .font(.subheadline)
-                            
-                            VStack(alignment: .leading) {
-                                ForEach(wands, id: \.self) { wand in
-                                    Text("• \(wand)")
-                                        .font(.subheadline)
-                                        .bold()
+                if character.attributes.patronus != nil || character.attributes.boggart != nil || character.attributes.animagus != nil ||
+                    !character.attributes.wands!.isEmpty {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Magical Info").font(.headline)
+                        
+                        if let patronus = character.attributes.patronus {
+                            InfoRow(label: "Patronus", value: patronus)
+                        }
+                        if let boggart = character.attributes.boggart {
+                            InfoRow(label: "Boggart", value: boggart)
+                        }
+                        if let animagus = character.attributes.animagus {
+                            InfoRow(label: "Animagus", value: animagus)
+                        }
+                        
+                        if let wands = character.attributes.wands, !wands.isEmpty {
+                            HStack(alignment: .top) {
+                                Text("Wand(s)")
+                                    .foregroundColor(.secondary)
+                                    .frame(width: 100, alignment: .leading)
+                                    .font(.subheadline)
+                                
+                                VStack(alignment: .leading) {
+                                    ForEach(wands, id: \.self) { wand in
+                                        Text("• \(wand)")
+                                            .font(.subheadline)
+                                            .bold()
+                                    }
                                 }
                             }
                         }

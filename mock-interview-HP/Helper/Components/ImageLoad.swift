@@ -18,7 +18,7 @@ struct ImageLoad: View {
             if let image = imageLoader.image {
                 Image(uiImage: image)
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
             } else if imageLoader.errorMessage != nil {
                 ZStack {
                     Color.gray.opacity(0.3)

@@ -1,5 +1,5 @@
 //
-//  SpellVM.swift
+//  PotionVM.swift
 //  mock-interview-HP
 //
 //  Created by Putu A D Kenzhie on 24/11/25.
@@ -9,12 +9,11 @@ import Foundation
 import Combine
 
 @MainActor
-class SpellVM: ObservableObject {
-    @Published var spells: [Resource<SpellAttributes>] = []
-    @Published var isLoading = false
+class PotionVM: ObservableObject {
+    @Published var potions: [Resource<PotionAttributes>] = []
     @Published var errorMessage: String?
+    @Published var isLoading = false
     
-    // Pagination State
     @Published private(set) var currentPage = 1
     @Published private(set) var hasNextPage = true
     
@@ -24,8 +23,8 @@ class SpellVM: ObservableObject {
     
     private let service = APIService()
     
-    func loadSpells() async {
-        if spells.isEmpty {
+    func loadPotions() async {
+        if potions.isEmpty {
             await fetchPage(page: 1)
         }
     }
@@ -42,23 +41,24 @@ class SpellVM: ObservableObject {
     
     private func fetchPage(page: Int) async {
         isLoading = true
-        spells = [] 
+        potions = []
         errorMessage = nil
         
         do {
-            let response = try await service.getSpells(page: page)
+            let response = try await service.getPotions(page: page)
             
-            self.spells = response.data
+            self.potions = response.data 
+            
             self.currentPage = page
             
-            if let next = response.meta?.pagination?.next {
+            if (response.meta?.pagination?.next) != nil {
                 self.hasNextPage = true
             } else {
                 self.hasNextPage = false
             }
         } catch {
             self.errorMessage = error.localizedDescription
-            print("Error loading spells: \(error)")
+            print("Error loading potions: \(error)")
         }
         isLoading = false
     }

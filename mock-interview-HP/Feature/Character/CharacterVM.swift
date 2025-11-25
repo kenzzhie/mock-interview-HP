@@ -11,13 +11,9 @@ import Combine
 @MainActor
 class CharacterVM: ObservableObject {
     @Published var characters: [Resource<CharacterAttributes>] = []
-    
-    // Default Sort: A-Z (true)
     @Published var isSortedByName = true
     @Published var isLoading = false
     
-    // Pagination State
-    // Make these public (read-only) so the View can disable buttons
     @Published private(set) var currentPage = 1
     @Published private(set) var hasNextPage = true
     
@@ -53,7 +49,7 @@ class CharacterVM: ObservableObject {
             self.characters = response.data
             self.currentPage = page
             
-            if let next = response.meta?.pagination?.next {
+            if (response.meta?.pagination?.next) != nil {
                 self.hasNextPage = true
             } else {
                 self.hasNextPage = false

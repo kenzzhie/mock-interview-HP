@@ -16,13 +16,13 @@ struct RecommendationCard: View {
             switch rec {
             case .book(let res):
                 VStack(alignment: .center, spacing: 5) {
-                    AsyncImage(url: res.attributes.cover) { $0.resizable().scaledToFit() } placeholder: { Color.gray.opacity(0.3) }
+                    ImageLoad(url: res.attributes.cover?.absoluteString)
                         .frame(width: 150, height: 200)
                     Text(res.attributes.title).font(.headline)
                 }
             case .movie(let res):
                 VStack(alignment: .center, spacing: 5) {
-                    AsyncImage(url: res.attributes.poster) { $0.resizable().scaledToFit() } placeholder: { Color.gray.opacity(0.3) }
+                    ImageLoad(url: res.attributes.poster?.absoluteString)
                         .frame(width: 150, height: 200)
                     Text(res.attributes.title).font(.headline)
                 }

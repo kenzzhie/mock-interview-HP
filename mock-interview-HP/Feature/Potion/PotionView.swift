@@ -1,5 +1,5 @@
 //
-//  CharacterView.swift
+//  PotionView.swift
 //  mock-interview-HP
 //
 //  Created by Putu A D Kenzhie on 24/11/25.
@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct CharacterView: View {
-    @EnvironmentObject var charVM: CharacterVM
+struct PotionView: View {
+    @EnvironmentObject var potionvm: PotionVM
     
     var body: some View {
         GeometryReader { geometry in
@@ -17,23 +17,25 @@ struct CharacterView: View {
             let columns = Array(repeating: GridItem(.flexible(), spacing: 50), count: count)
             
             VStack {
-                if charVM.isLoading {
+                if potionvm.isLoading {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if let error = potionvm.errorMessage {
+                    Text(error).foregroundColor(.red)
                 } else {
                     ScrollViewReader { proxy in
                         ScrollView {
                             LazyVGrid(columns: columns, spacing: 50) {
-                                ForEach(charVM.characters) { character in
+                                ForEach(potionvm.potions) { potion in
                                     NavigationLink {
-                                        CharacterDetailView(character: character)
+                                        PotionDetailView(potion: potion)
                                     } label: {
-                                        VStack {
-                                            ImageLoad(url: character.attributes.image?.absoluteString)
+                                        VStack(spacing: 10) {
+                                            ImageLoad(url: potion.attributes.image?.absoluteString)
                                                 .frame(width: 150, height: 200)
                                                 .shadow(radius: 3)
                                             
-                                            Text(character.attributes.name)
+                                            Text(potion.attributes.name)
                                                 .font(.subheadline)
                                                 .multilineTextAlignment(.center)
                                                 .foregroundColor(.primary)
@@ -41,10 +43,10 @@ struct CharacterView: View {
                                     }
                                 }
                             }
-                            .padding()
+                            .padding(.horizontal, 40)
                             .id("Top")
                         }
-                        .onChange(of: charVM.currentPage) { _, _ in
+                        .onChange(of: potionvm.currentPage) { _, _ in
                             withAnimation {
                                 proxy.scrollTo("Top", anchor: .top)
                             }
@@ -53,58 +55,54 @@ struct CharacterView: View {
                 }
             }
         }
-        .navigationTitle("Characters")
+        .navigationTitle("Potions")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    Task { await charVM.toggleSort() }
-                } label: {
-                    Image(systemName: charVM.isSortedByName ? "arrow.up.arrow.down.circle.fill" : "arrow.up.arrow.down.circle")
-                }
-            }
-            
-        }
-        .overlay(alignment: .bottom){
+        .overlay(alignment: .bottom) {
             ZStack(alignment: .bottom) {
                 HStack {
                     Button {
-                        Task { await charVM.previousPage() }
+                        Task { await potionvm.previousPage() }
                     } label: {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 20, weight: .bold))
                             .padding(15)
                     }
                     .glassEffect()
+                    .disabled(!potionvm.hasPreviousPage)
+                    
                     Spacer()
-                    Text("Page \(charVM.currentPage)")
+                    
+                    Text("Page \(potionvm.currentPage)")
                         .font(.caption)
                         .foregroundColor(.secondary)
+                    
                     Spacer()
+                    
                     Button {
-                        Task { await charVM.nextPage() }
+                        Task { await potionvm.nextPage() }
                     } label: {
                         Image(systemName: "chevron.right")
                             .font(.system(size: 20, weight: .bold))
-                            .padding()
+                            .padding(15)
+                            
                     }
                     .glassEffect()
+                    
+                    .disabled(!potionvm.hasNextPage)
                 }
-                .padding(.leading, 30)
-                .padding(.trailing, 30)
+                .padding(.horizontal, 30)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity,alignment: .bottom)
             .padding(.bottom, 20)
         }
         .task {
-            await charVM.loadCharacters()
+            await potionvm.loadPotions()
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        CharacterView()
-            .environmentObject(CharacterVM())
+        PotionView()
+            .environmentObject(PotionVM())
     }
 }

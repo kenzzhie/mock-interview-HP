@@ -13,7 +13,7 @@ struct InfoRow: View {
     
     var body: some View {
         HStack(alignment: .top) {
-            Text(label)
+            Text("\(label):")
                 .foregroundColor(.secondary)
                 .frame(width: 100, alignment: .leading)
             Text(value)

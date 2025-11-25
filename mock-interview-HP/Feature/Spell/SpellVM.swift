@@ -51,7 +51,7 @@ class SpellVM: ObservableObject {
             self.spells = response.data
             self.currentPage = page
             
-            if let next = response.meta?.pagination?.next {
+            if (response.meta?.pagination?.next) != nil {
                 self.hasNextPage = true
             } else {
                 self.hasNextPage = false
