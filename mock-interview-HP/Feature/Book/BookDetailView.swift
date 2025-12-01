@@ -109,10 +109,8 @@ struct BookDetailView: View {
             .padding()
         }
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            Task {
+        .task {
                 await chapterVM.loadChapters(for: book.id)
-            }
         }
     }
 }

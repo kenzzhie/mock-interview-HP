@@ -51,10 +51,8 @@ struct BookView: View {
         .navigationTitle("Books")
         .navigationBarTitleDisplayMode(.inline)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onAppear{
-            Task{
+        .task{
                 await bookvm.loadBooks()
-            }
         }
     }
 }

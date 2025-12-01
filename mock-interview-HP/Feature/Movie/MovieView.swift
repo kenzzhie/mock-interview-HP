@@ -51,10 +51,8 @@ struct MovieView: View {
         .navigationTitle("Movie")
         .navigationBarTitleDisplayMode(.inline)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onAppear{
-            Task{
+        .task {
                 await movievm.loadMovies()
-            }
         }
     }
 }
